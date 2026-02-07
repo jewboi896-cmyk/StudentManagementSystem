@@ -1,0 +1,22 @@
+{
+  "Homework 1": {
+    "name": "Homework 1",
+    "maxScore": 30,
+    "dueDate": "2023-09-15",
+    "description": "Write a program to sort an array",
+    "course": {
+      "name": "Introduction to Programming",
+      "instructor": "Dr. Smith",
+      "ID": "CS101",
+      "credits": 4,
+      "size": 30,
+      "categoryWeights": {
+        "Exams": 0.4,
+        "Quizzes": 0.2,
+        "Final": 0.2,
+        "Homework": 0.2
+      }
+    },
+    "category": "Homework"
+  }
+}
