@@ -4,7 +4,7 @@ import Assignments.Assignment;
 import Course.Course;
 import GPACalculator.GpaCalculator;
 import Grades.TermGrade;
-import Main.Main;
+import Main.Entry;
 import Student.Student;
 import Term.AcademicTerm;
 
@@ -45,7 +45,7 @@ public class ReportGenerator {
         } 
         else {
             for (String courseName : student.getEnrolledCourses()) {
-                Course course = Main.courseMap.get(courseName);
+                Course course = Entry.courseMap.get(courseName);
                 if (course != null) {
                     report.append("Course: ").append(course.getCourseName()).append("\n");
                     report.append("Instructor: ").append(course.getCourseInstructor()).append("\n");
@@ -116,7 +116,7 @@ public class ReportGenerator {
         
         // Get all enrolled students
         List<Student> enrolledStudents = new ArrayList<>();
-        for (Student student : Main.studentMap.values()) {
+        for (Student student : Entry.studentMap.values()) {
             if (student.isEnrolledInCourse(course.getCourseName())) { enrolledStudents.add(student); }
         }
         
@@ -186,7 +186,7 @@ public class ReportGenerator {
 
         // get all courses in current term
         List<Course> courses = new ArrayList<>();
-        for (Course courseName : Main.courseMap.values()) {
+        for (Course courseName : Entry.courseMap.values()) {
             if (courseName.isInTerm(courseName.getCourseName())) { courses.add(courseName); }
         }
         // get number of courses in current term
@@ -196,7 +196,7 @@ public class ReportGenerator {
         if (courses.isEmpty()) { report.append("No courses found.\n"); }
 
         // generate course report for each course
-        for (Course courseName : Main.courseMap.values()) {
+        for (Course courseName : Entry.courseMap.values()) {
             generateCourseReport(courseName);
         }
 
@@ -210,7 +210,7 @@ public class ReportGenerator {
     // Helper method to get all assignments for a course
     private static List<Assignment> getAssignmentsForCourse(Course course) {
         List<Assignment> assignments = new ArrayList<>();
-        for (Assignment assignment : Main.assignmentMap.values()) {
+        for (Assignment assignment : Entry.assignmentMap.values()) {
             if (assignment.getCourse().equals(course)) { assignments.add(assignment); }
         }
         return assignments;

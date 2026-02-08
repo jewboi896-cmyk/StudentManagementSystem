@@ -2,18 +2,18 @@ package Teacher;
 
 import User.User;
 import Course.Course;
-import Main.Main;
+import Main.Entry;
 import Role.RoleUtil;
 
 import java.util.Scanner;
 
 public class TeacherMenuManager {
     private final Scanner scanner;
-    private final Main mainApp;
+    private final Entry entryApp;
 
-    public TeacherMenuManager(Scanner scanner, Main mainApp) {
+    public TeacherMenuManager(Scanner scanner, Entry entryApp) {
         this.scanner = scanner;
-        this.mainApp = mainApp;
+        this.entryApp = entryApp;
     }
 
     public void assignTeacherToCourse(User currentUser) {
@@ -41,7 +41,7 @@ public class TeacherMenuManager {
         String courseName = scanner.nextLine().trim();
 
         // Validate course
-        Course course = mainApp.courseValidation(courseName);
+        Course course = entryApp.courseValidation(courseName);
         if (course == null) {
             System.out.println("Error: Course '" + courseName + "' not found.");
             return;
@@ -83,7 +83,7 @@ public class TeacherMenuManager {
         String courseName = scanner.nextLine().trim();
 
         // Validate course
-        Course course = mainApp.courseValidation(courseName);
+        Course course = entryApp.courseValidation(courseName);
         if (course == null) {
             System.out.println("Error: Course '" + courseName + "' not found.");
             return;
@@ -138,7 +138,7 @@ public class TeacherMenuManager {
 
         boolean foundCourses = false;
 
-        for (Course course : Main.courseMap.values()) {
+        for (Course course : Entry.courseMap.values()) {
             if (course.getCourseInstructor().equals(teacherName)) {
                 foundCourses = true;
                 System.out.println("\nCourse: " + course.getCourseName());
@@ -148,7 +148,7 @@ public class TeacherMenuManager {
 
                 // Count enrolled students
                 int enrolledCount = 0;
-                for (Student.Student student : Main.studentMap.values()) {
+                for (Student.Student student : Entry.studentMap.values()) {
                     if (student.isEnrolledInCourse(course.getCourseName())) {
                         enrolledCount++;
                     }
@@ -177,7 +177,7 @@ public class TeacherMenuManager {
         boolean foundTeachers = false;
 
         // Find all users with TEACHER role
-        for (User user : Main.authentication.getAllUsers()) {
+        for (User user : Entry.authentication.getAllUsers()) {
             if (user.getRole() == RoleUtil.Role.TEACHER) {
                 foundTeachers = true;
                 String teacherName = user.getAssocID();
@@ -186,7 +186,7 @@ public class TeacherMenuManager {
 
                 // Count courses taught
                 int courseCount = 0;
-                for (Course course : Main.courseMap.values()) {
+                for (Course course : Entry.courseMap.values()) {
                     if (course.getCourseInstructor().equals(teacherName)) {
                         courseCount++;
                     }
@@ -204,7 +204,7 @@ public class TeacherMenuManager {
 
     // Helper method to validate if a teacher exists in the system
     private boolean isValidTeacher(String teacherName) {
-        for (User user : Main.authentication.getAllUsers()) {
+        for (User user : Entry.authentication.getAllUsers()) {
             if (user.getRole() == RoleUtil.Role.TEACHER && user.getAssocID().equals(teacherName)) {
                 return true;
             }

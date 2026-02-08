@@ -5,7 +5,7 @@ This file manages attendence tracking and recording
 package Attendance;
 
 import Course.Course;
-import Main.Main;
+import Main.Entry;
 import Role.RoleUtil;
 import Student.Student;
 import User.User;
@@ -15,11 +15,11 @@ import java.util.*;
 
 public class AttendanceManager {
     private final Scanner scanner;
-    private final Main mainApp;
+    private final Entry entryApp;
     
-    public AttendanceManager(Scanner scanner, Main mainApp) {
+    public AttendanceManager(Scanner scanner, Entry entryApp) {
         this.scanner = scanner;
-        this.mainApp = mainApp;
+        this.entryApp = entryApp;
     }
     
     public void takeAttendance(User currentUser) {
@@ -34,7 +34,7 @@ public class AttendanceManager {
         // Get course
         System.out.print("Enter course name: ");
         String courseName = scanner.nextLine().trim();
-        Course course = mainApp.courseValidation(courseName);
+        Course course = entryApp.courseValidation(courseName);
         
         if (course == null) {
             System.out.println("Error: Course '" + courseName + "' not found.");
@@ -61,7 +61,7 @@ public class AttendanceManager {
         
         // Get enrolled students
         List<Student> enrolledStudents = new ArrayList<>();
-        for (Student enrolledStudent : Main.studentMap.values()) {
+        for (Student enrolledStudent : Entry.studentMap.values()) {
             if (enrolledStudent.isEnrolledInCourse(course.getCourseName())) {
                 enrolledStudents.add(enrolledStudent);
             }
@@ -79,7 +79,7 @@ public class AttendanceManager {
         // Take attendance for each student
         for (Student student : enrolledStudents) {
             // Check if attendance already exists for today
-            AttendanceRecord existingStudent = Main.getAttendanceRecord(student, course, today, period);
+            AttendanceRecord existingStudent = Entry.getAttendanceRecord(student, course, today, period);
             // if they dont, add them
             if (existingStudent != null) {
                 System.out.print(student.getStudentName() + " [Current: " + existingStudent.getStatusString() + "]: ");
@@ -117,7 +117,7 @@ public class AttendanceManager {
             else {
                 attendenceRecord = new AttendanceRecord(student, course, today, period, null);
                 attendenceRecord.setStatus(attendenceStatus);
-                Main.attendanceMap.put(attendenceRecord.getKey(), attendenceRecord);
+                Entry.attendanceMap.put(attendenceRecord.getKey(), attendenceRecord);
             }
             
             // Optional: Add note for absences
@@ -154,7 +154,7 @@ public class AttendanceManager {
         System.out.print("\nEnter student name: ");
         String studentName = scanner.nextLine().trim();
         
-        Student student = mainApp.studentValidation(studentName);
+        Student student = entryApp.studentValidation(studentName);
         if (student == null) {
             System.out.println("Error: Student '" + studentName + "' not found.");
             return;
@@ -171,7 +171,7 @@ public class AttendanceManager {
         boolean foundRecords = false;
         int presentCount = 0, absentCount = 0, tardyCount = 0, excusedCount = 0;
         
-        for (AttendanceRecord attendenceRecord : Main.attendanceMap.values()) {
+        for (AttendanceRecord attendenceRecord : Entry.attendanceMap.values()) {
             // if student found in attendence record, print their info
             if (attendenceRecord.getStudent().getStudentName().equals(studentName)) {
                 foundRecords = true;
@@ -212,7 +212,7 @@ public class AttendanceManager {
         System.out.print("\nEnter course name: ");
         String courseName = scanner.nextLine().trim();
         // validate course
-        Course course = mainApp.courseValidation(courseName);
+        Course course = entryApp.courseValidation(courseName);
         if (course == null) {
             System.out.println("Error: Course '" + courseName + "' not found.");
             return;
@@ -242,7 +242,7 @@ public class AttendanceManager {
         
         boolean foundRecords = false;
         
-        for (AttendanceRecord attendenceRecord : Main.attendanceMap.values()) {
+        for (AttendanceRecord attendenceRecord : Entry.attendanceMap.values()) {
             // if the attendence record of the selected course equals the courses name and the date and the period is empty or the selected period is the correct one, print the status of the record
             if (attendenceRecord.getCourse().getCourseName().equals(courseName) && attendenceRecord.getDate().equals(targetDate) && (period.isEmpty() || attendenceRecord.getPeriod().equals(period))) {
                 foundRecords = true;
@@ -269,7 +269,7 @@ public class AttendanceManager {
         // Group by course
         Map<String, List<AttendanceRecord>> attendenceByCourse = new HashMap<>();
         
-        for (AttendanceRecord attendenceRecord : Main.attendanceMap.values()) {
+        for (AttendanceRecord attendenceRecord : Entry.attendanceMap.values()) {
             // if date is correct, add attendence record to the map
             if (attendenceRecord.getDate().equals(targetDate)) {
                 String key = attendenceRecord.getCourse().getCourseName() + " - " + attendenceRecord.getPeriod();
@@ -308,7 +308,7 @@ public class AttendanceManager {
         System.out.print("Enter student name: ");
         String studentName = scanner.nextLine().trim();
         // validate student name
-        Student student = mainApp.studentValidation(studentName);
+        Student student = entryApp.studentValidation(studentName);
         if (student == null) {
             System.out.println("Error: Student not found.");
             return;

@@ -4,8 +4,7 @@ import Assignments.AssignmentMenuManager;
 import Attendance.AttendanceManager;
 import Course.CourseMenuManager;
 import DataManager.DataManager;
-import Exceptions.AuthenticationExceptions.InvalidCredentialsException;
-import Main.Main;
+import Main.Entry;
 import Role.RoleUtil;
 import Student.StudentMenuManager;
 import Teacher.TeacherMenuManager;
@@ -14,7 +13,7 @@ import java.util.Scanner;
 
 public class Menu {
     private final Scanner scanner;
-    private final Main mainApp;
+    private final Entry entryApp;
     private User currentUser;
     private final StudentMenuManager studentManager;
     private final CourseMenuManager courseManager;
@@ -23,14 +22,14 @@ public class Menu {
     private final AttendanceManager attendanceManager;  
 
     // Constructor
-    public Menu(Main mainApp) {
+    public Menu(Entry entryApp) {
         this.scanner = new Scanner(System.in);
-        this.mainApp = mainApp;
-        this.studentManager = new StudentMenuManager(scanner, mainApp);
-        this.courseManager = new CourseMenuManager(scanner, mainApp);
-        this.assignmentManager = new AssignmentMenuManager(scanner, mainApp);
-        this.teacherManager = new TeacherMenuManager(scanner, mainApp);
-        this.attendanceManager = new AttendanceManager(scanner, mainApp);
+        this.entryApp = entryApp;
+        this.studentManager = new StudentMenuManager(scanner, entryApp);
+        this.courseManager = new CourseMenuManager(scanner, entryApp);
+        this.assignmentManager = new AssignmentMenuManager(scanner, entryApp);
+        this.teacherManager = new TeacherMenuManager(scanner, entryApp);
+        this.attendanceManager = new AttendanceManager(scanner, entryApp);
     }
     // Start the menu loop
     public void start() throws Exception {
@@ -39,8 +38,8 @@ public class Menu {
             // Load existing data
             DataManager.loadAllData();
             // Initialize data if none exists
-            if (Main.courseMap.isEmpty() && Main.studentMap.isEmpty() && Main.assignmentMap.isEmpty()) {
-                Main.initAllData();
+            if (Entry.courseMap.isEmpty() && Entry.studentMap.isEmpty() && Entry.assignmentMap.isEmpty()) {
+                Entry.initAllData();
             }
 
             if (!login()) {
@@ -91,7 +90,7 @@ public class Menu {
                     case "View Attendance", "28" -> attendanceManager.viewAttendance(currentUser);
                     case "Generate Attendance Report", "29" -> attendanceManager.generateAttendanceReport(currentUser);
                     case "Save and Exit", "30" -> {
-                        DataManager.saveAllData(Main.courseMap, Main.studentMap, Main.assignmentMap, Main.attendanceMap);
+                        DataManager.saveAllData(Entry.courseMap, Entry.studentMap, Entry.assignmentMap, Entry.attendanceMap);
                         isMenuRunning = false;
                         System.out.println("Data saved. Exiting application.");
                     }
@@ -132,7 +131,7 @@ public class Menu {
             String password = scanner.nextLine().trim();
 
             // validate user credentials 
-            User result = Main.authentication.login(username, password);
+            User result = Entry.authentication.login(username, password);
 
             if (result != null) {
                 currentUser = result;

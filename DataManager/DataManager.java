@@ -8,7 +8,7 @@ package DataManager;
 import Assignments.Assignment;
 import Attendance.AttendanceRecord;
 import Course.Course;
-import Main.Main;
+import Main.Entry;
 import Student.Student;
 
 import com.google.gson.Gson;
@@ -122,10 +122,10 @@ public class DataManager {
 
     // Load everything at once
     public static void loadAllData() {
-        Main.courseMap.putAll(loadCourses());
-        Main.studentMap.putAll(loadStudents());
-        Main.assignmentMap.putAll(loadAssignments());
-        Main.attendanceMap.putAll(loadAttendance());
+        Entry.courseMap.putAll(loadCourses());
+        Entry.studentMap.putAll(loadStudents());
+        Entry.assignmentMap.putAll(loadAssignments());
+        Entry.attendanceMap.putAll(loadAttendance());
     }
 
     public static void saveAttendance(Map<String, AttendanceRecord> attendance) {

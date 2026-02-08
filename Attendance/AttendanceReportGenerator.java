@@ -4,7 +4,7 @@ This file generates attendence reports
 
 package Attendance;
 
-import Main.Main;
+import Main.Entry;
 import Student.Student;
 import java.util.*;
 
@@ -24,7 +24,7 @@ public class AttendanceReportGenerator {
         Map<String, int[]> attendenceByCourse = new HashMap<>();
         // int[] = {present, absent, tardy, excused}
         
-        for (AttendanceRecord attendanceRecord : Main.attendanceMap.values()) {
+        for (AttendanceRecord attendanceRecord : Entry.attendanceMap.values()) {
             if (attendanceRecord.getStudent().equals(student)) {
                 String courseName = attendanceRecord.getCourse().getCourseName();
                 int[] attendenceCounts = attendenceByCourse.computeIfAbsent(courseName, k -> new int[4]);

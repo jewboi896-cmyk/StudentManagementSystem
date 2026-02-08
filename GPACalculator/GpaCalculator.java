@@ -6,11 +6,10 @@ package GPACalculator;
 
 import Course.Course;
 import Grades.TermGrade;
-import Main.Main;
+import Main.Entry;
 import Term.AcademicTerm;
 
 import java.util.Map;
-import java.util.Map.Entry;
 
 public class GpaCalculator {
     
@@ -39,7 +38,7 @@ public class GpaCalculator {
         double totalPoints = 0.0;
         int totalCredits = 0;
         // Iterate through courses and their corresponding grades
-        for (Entry<String, Map<AcademicTerm, TermGrade>> gradeEntry : studentGrades.entrySet()) {
+        for (Map.Entry<String, Map<AcademicTerm, TermGrade>> gradeEntry : studentGrades.entrySet()) {
             String courseName = gradeEntry.getKey();
             Map<AcademicTerm, TermGrade> termGrades = gradeEntry.getValue();
             // Iterate through all terms for this course
@@ -48,7 +47,7 @@ public class GpaCalculator {
                 // skip N/A grades
                 if (termGrade.equals("N/A")) continue;
 
-                Course selectedCourse = Main.courseMap.get(courseName);
+                Course selectedCourse = Entry.courseMap.get(courseName);
 
                 if (selectedCourse != null) {
                     double gradePoints = letterGradeToPoints(String.valueOf(termGrade));

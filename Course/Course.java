@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static Main.Main.courseMap;
+import static Main.Entry.courseMap;
 
 public class Course {
     private final String courseName;

@@ -1,6 +1,6 @@
 package Term;
 
-import Main.Main;
+import Main.Entry;
 import Report.ReportGenerator;
 import Role.RoleUtil;
 import User.User;
@@ -11,11 +11,11 @@ import java.time.format.DateTimeParseException;
 
 public class AcademicYearManager {
     private final Scanner scanner;
-    private final Main mainApp;
+    private final Entry entryApp;
 
-    public AcademicYearManager(Scanner scanner, Main mainApp) {
+    public AcademicYearManager(Scanner scanner, Entry entryApp) {
         this.scanner = scanner;
-        this.mainApp = mainApp;
+        this.entryApp = entryApp;
     }
     // only admins can do this
     public void createAcademicYear(User currentUser) {
@@ -67,14 +67,14 @@ public class AcademicYearManager {
 
         String yearName = year + "-" + (year + 1);
         // check if year is a duplicate
-        if (Main.yearMap.containsKey(yearName)) {
+        if (Entry.yearMap.containsKey(yearName)) {
             System.out.print("Error: Academic year '" + yearName + "' already exists.");
             return;
         }
         // create a new AcademicYear instance
         AcademicYear newYear = new AcademicYear(yearName, yearStartDate, yearEndDate);
         // add it to the map
-        Main.yearMap.put(yearName, newYear);
+        Entry.yearMap.put(yearName, newYear);
 
         System.out.print("Success! Academic year '" + yearName + "' has been created.");
     }
@@ -108,13 +108,13 @@ public class AcademicYearManager {
         }
 
         // get the year from the map
-        Main.yearMap.get(yearInput);
+        Entry.yearMap.get(yearInput);
 
         // ask for confirmation
         System.out.println("Are you sure you want to delete this year (yes/no)? ");
         String input = scanner.nextLine().trim();
         if (input.equalsIgnoreCase("yes")) {
-            Main.yearMap.remove(yearInput);
+            Entry.yearMap.remove(yearInput);
         }
     }
     // admin only
@@ -139,14 +139,14 @@ public class AcademicYearManager {
         }
 
         String yearName = year + "-" + (year + 1);
-        AcademicYear academicYear = Main.yearMap.get(yearName);
+        AcademicYear academicYear = Entry.yearMap.get(yearName);
         if (academicYear == null) {
             System.out.print("Error: Academic year '" + yearName + "' not found.");
             return;
         }
 
         boolean foundAny = false;
-        for (AcademicTerm term : Main.termMap.values()) {
+        for (AcademicTerm term : Entry.termMap.values()) {
             if (isTermInYear(term, academicYear)) {
                 foundAny = true;
                 System.out.println(ReportGenerator.generateTermReport(term));

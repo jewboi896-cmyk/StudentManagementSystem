@@ -5,21 +5,20 @@ import Assignments.AssignmentSubmission;
 import Course.Course;
 import GPACalculator.GpaCalculator;
 import Grades.TermGrade;
-import Main.Main;
+import Main.Entry;
 import Role.RoleUtil;
 import Term.AcademicTerm;
 import User.User;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Scanner;
 
 public class StudentMenuManager {
     private final Scanner scanner;
-    public static Main mainApp;
+    public static Entry entryApp;
 
-    public StudentMenuManager(Scanner scanner, Main mainApp) {
+    public StudentMenuManager(Scanner scanner, Entry entryApp) {
         this.scanner = scanner;
-        this.mainApp = mainApp;
+        this.entryApp = entryApp;
     }
 
     public void viewStudentInfo(User currentUser) {
@@ -36,7 +35,7 @@ public class StudentMenuManager {
         }
 
         // Validate student
-        Student student = mainApp.studentValidation(studentName);
+        Student student = entryApp.studentValidation(studentName);
 
         // Check if student exists
         if (student == null) {
@@ -52,7 +51,7 @@ public class StudentMenuManager {
 
         // Display student information
         System.out.println("\n=== Student Details ===");
-        mainApp.displayStudentAttributes(student);
+        entryApp.displayStudentAttributes(student);
     
     }
 
@@ -70,7 +69,7 @@ public class StudentMenuManager {
         String name = scanner.nextLine().trim();
     
         // Check if student already exists
-        if (Main.studentMap.containsKey(name)) {
+        if (Entry.studentMap.containsKey(name)) {
             System.out.println("Error: A student with the name '" + name + "' already exists.");
             return;
         }
@@ -95,7 +94,7 @@ public class StudentMenuManager {
     
         // Create and add the student
         Student newStudent = new Student(name, age, year);
-        Main.addStudent(newStudent);
+        Entry.addStudent(newStudent);
     
         System.out.println("Success! Student '" + name + "' has been added.");
     }
@@ -112,7 +111,7 @@ public class StudentMenuManager {
         String studentName = scanner.nextLine().trim();
 
         // Validate student
-        Student student = mainApp.studentValidation(studentName);
+        Student student = entryApp.studentValidation(studentName);
 
         // Check if student exists
         if (student == null) {
@@ -129,7 +128,7 @@ public class StudentMenuManager {
         }
     
         // Remove student from the system
-        Main.studentMap.remove(studentName);
+        Entry.studentMap.remove(studentName);
         System.out.println("Success! Student '" + studentName + "' has been deleted.");
     }
 
@@ -144,7 +143,7 @@ public class StudentMenuManager {
     
         System.out.print("Enter student name: ");
         String studentName = scanner.nextLine().trim();
-        Student student = mainApp.studentValidation(studentName);
+        Student student = entryApp.studentValidation(studentName);
         if (student == null) {
             System.out.println("Error: Student not found.");
             return;
@@ -152,7 +151,7 @@ public class StudentMenuManager {
     
         System.out.print("Enter course name: ");
         String courseName = scanner.nextLine().trim();
-        Course course = mainApp.courseValidation(courseName);
+        Course course = entryApp.courseValidation(courseName);
         if (course == null) {
             System.out.println("Error: Course not found.");
             return;
@@ -176,7 +175,7 @@ public class StudentMenuManager {
         String studentName = determineStudentName(currentUser);
 
         // Validate student
-        Student student = mainApp.studentValidation(studentName);
+        Student student = entryApp.studentValidation(studentName);
         if (student == null) {
             System.out.println("Error: Student '" + studentName + "' not found.");
             return;
@@ -220,7 +219,7 @@ public class StudentMenuManager {
         String studentName = scanner.nextLine().trim();
 
         // Validate student
-        Student student = mainApp.studentValidation(studentName);
+        Student student = entryApp.studentValidation(studentName);
         if (student == null) {
             System.out.println("Error: Student '" + studentName + "' not found.");
             return;
@@ -231,7 +230,7 @@ public class StudentMenuManager {
         String courseName = scanner.nextLine().trim();
 
         // Validate course
-        Course course = mainApp.courseValidation(courseName);
+        Course course = entryApp.courseValidation(courseName);
         if (course == null) {
             System.out.println("Error: Course '" + courseName + "' not found.");
             return;
@@ -277,7 +276,7 @@ public class StudentMenuManager {
         System.out.print("Enter student name: ");
         String studentName = scanner.nextLine().trim();
 
-        Student student = mainApp.studentValidation(studentName);
+        Student student = entryApp.studentValidation(studentName);
         if (student == null) {
             System.out.println("Error: Student '" + studentName + "' not found.");
             return;
@@ -384,7 +383,7 @@ public class StudentMenuManager {
             }
         }
         // validate student
-        Student student = mainApp.studentValidation(studentName);
+        Student student = entryApp.studentValidation(studentName);
 
         // check if student exists
         if (student == null) {
@@ -396,7 +395,7 @@ public class StudentMenuManager {
         String assignmentName = scanner.nextLine().trim();
 
         // validate assignment
-        Assignment assignment = mainApp.assignmentValidation(assignmentName);
+        Assignment assignment = entryApp.assignmentValidation(assignmentName);
 
         if (assignment == null) {
             System.out.println("Error: Assignment '" + assignmentName + "' not found.");
@@ -437,7 +436,7 @@ public class StudentMenuManager {
             studentName = scanner.nextLine().trim();
         }
 
-        Student student = mainApp.studentValidation(studentName);
+        Student student = entryApp.studentValidation(studentName);
         if (student == null) {
             System.out.println("Error: Student '" + studentName + "' not found.");
             return;
@@ -457,13 +456,13 @@ public class StudentMenuManager {
             boolean hasSubmissions = false;
         
             for (String courseName : student.getEnrolledCourses()) {
-                Course course = Main.courseMap.get(courseName);
+                Course course = Entry.courseMap.get(courseName);
                 if (course == null) continue;
             
                 System.out.println("\nCourse: " + courseName);
                 System.out.println("----------------------------------------");
             
-                for (Assignment assignment : Main.assignmentMap.values()) {
+                for (Assignment assignment : Entry.assignmentMap.values()) {
                     if (assignment.getCourse().equals(course)) {
                         hasSubmissions = true;
                         AssignmentSubmission submission = student.getSubmission(assignment);
@@ -481,7 +480,7 @@ public class StudentMenuManager {
         } 
         else {
             // Show specific assignment
-            Assignment assignment = mainApp.assignmentValidation(assignmentName);
+            Assignment assignment = entryApp.assignmentValidation(assignmentName);
             if (assignment == null) {
                 System.out.println("Error: Assignment '" + assignmentName + "' not found.");
                 return;
@@ -510,7 +509,7 @@ public class StudentMenuManager {
         System.out.print("Enter student name: ");
         String studentName = scanner.nextLine().trim();
 
-        Student student = mainApp.studentValidation(studentName);
+        Student student = entryApp.studentValidation(studentName);
         if (student == null) {
             System.out.println("Error: Student '" + studentName + "' not found.");
             return;
@@ -519,7 +518,7 @@ public class StudentMenuManager {
         System.out.print("Enter assignment name: ");
         String assignmentName = scanner.nextLine().trim();
 
-        Assignment assignment = mainApp.assignmentValidation(assignmentName);
+        Assignment assignment = entryApp.assignmentValidation(assignmentName);
         if (assignment == null) {
             System.out.println("Error: Assignment '" + assignmentName + "' not found.");
             return;
@@ -551,7 +550,7 @@ public class StudentMenuManager {
             studentName = scanner.nextLine().trim();
         }
 
-        Student student = mainApp.studentValidation(studentName);
+        Student student = entryApp.studentValidation(studentName);
         if (student == null) {
             System.out.println("Error: Student '" + studentName + "' not found.");
             return;
@@ -572,7 +571,7 @@ public class StudentMenuManager {
         Map<String,Map<AcademicTerm,TermGrade>> grades = student.getCourseGrades();
         if (!grades.isEmpty()) {
             System.out.println("\nCurrent Grades:");
-            for (Entry<String, Map<AcademicTerm, TermGrade>> entry : grades.entrySet()) {
+            for (Map.Entry<String, Map<AcademicTerm, TermGrade>> entry : grades.entrySet()) {
                 System.out.println("  " + entry.getKey() + ": " + entry.getValue());
             }
         

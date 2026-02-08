@@ -3,7 +3,7 @@ package User;
 import Assignments.Assignment;
 import Course.Course;
 import Grades.TermGrade;
-import Main.Main;
+import Main.Entry;
 import Password.PasswordUtil;
 import Role.RoleUtil;
 import Student.Student;
@@ -54,14 +54,14 @@ public class User {
             case ADMIN -> true;
             case TEACHER -> this.assocID.equals(course.getCourseInstructor());
             case STUDENT -> {
-                Student student = Main.studentMap.get(this.assocID);
+                Student student = Entry.studentMap.get(this.assocID);
                 yield student != null && student.isEnrolledInCourse(course.getCourseName());
             }
             case PARENT -> {
                 // For parents, check if their child is enrolled
                 String[] childrenIDs = this.assocID.split(",");
                 for (String childId : childrenIDs) {
-                    Student child = Main.studentMap.get(childId.trim());
+                    Student child = Entry.studentMap.get(childId.trim());
                     if (child != null && child.isEnrolledInCourse(course.getCourseName())) {
                         yield true;
                     }
@@ -78,7 +78,7 @@ public class User {
             case ADMIN, TEACHER -> true;
             case STUDENT -> {
                 // get student ID from student map
-                Student student = Main.studentMap.get(this.assocID);
+                Student student = Entry.studentMap.get(this.assocID);
                 // if student doesn't exist, yield false but continue with rest of method
                 if (student == null) { yield false; }
                 // check if student has grades within current term

@@ -7,7 +7,7 @@ package Course;
 import Assignments.Assignment;
 import CategoryWeight.CategoryWeightManager;
 import Course.CourseSchedular.DaysOfTheWeek;
-import Main.Main;
+import Main.Entry;
 import Report.ReportGenerator;
 import Role.RoleUtil;
 import Student.Student;
@@ -16,13 +16,13 @@ import java.util.Scanner;
 
 public class CourseMenuManager {
     private final Scanner scanner;
-    private final Main mainApp;
+    private final Entry entryApp;
     private final CategoryWeightManager categoryWeightManager;
 
-    public CourseMenuManager(Scanner scanner, Main mainApp) {
+    public CourseMenuManager(Scanner scanner, Entry entryApp) {
         this.scanner = scanner;
-        this.mainApp = mainApp;
-        this.categoryWeightManager = new CategoryWeightManager(scanner, mainApp);
+        this.entryApp = entryApp;
+        this.categoryWeightManager = new CategoryWeightManager(scanner, entryApp);
     }
 
     public void viewCourseInfo(User currentUser) {
@@ -30,7 +30,7 @@ public class CourseMenuManager {
         System.out.print("Enter course name: ");
         String courseName = scanner.nextLine().trim();
         // Validate course
-        Course selectedCourse = mainApp.courseValidation(courseName);
+        Course selectedCourse = entryApp.courseValidation(courseName);
         // Check if course exists
         if (selectedCourse == null) {
             System.out.println("Error: Course '" + courseName + "' not found.");
@@ -44,7 +44,7 @@ public class CourseMenuManager {
         
         // Display course information
         System.out.println("\n=== Course Details ===");
-        mainApp.displayCourseAttributes(selectedCourse);
+        entryApp.displayCourseAttributes(selectedCourse);
     }
 
     public void addNewCourse(User currentUser) {
@@ -61,7 +61,7 @@ public class CourseMenuManager {
         String courseName = scanner.nextLine().trim();
     
         // Check if course already exists
-        if (Main.courseMap.containsKey(courseName)) {
+        if (Entry.courseMap.containsKey(courseName)) {
             System.out.println("Error: A course with the name '" + courseName + "' already exists.");
             return;
         }
@@ -119,7 +119,7 @@ public class CourseMenuManager {
             categoryWeightManager.addCategoryWeights(newCourse);
         }
         // Add the course to the system
-        Main.addCourse(newCourse);
+        Entry.addCourse(newCourse);
         System.out.println("Success! Course '" + courseName + "' has been added.");
     }
 
@@ -137,7 +137,7 @@ public class CourseMenuManager {
         String courseName = scanner.nextLine().trim();
 
         // Validate course
-        Course selectedCourse = mainApp.courseValidation(courseName);
+        Course selectedCourse = entryApp.courseValidation(courseName);
 
         // Check if course exists
         if (selectedCourse == null) {   
@@ -154,7 +154,7 @@ public class CourseMenuManager {
     
         boolean foundStudents = false;
     
-        for (Student enrolledStudent : Main.studentMap.values()) {
+        for (Student enrolledStudent : Entry.studentMap.values()) {
             // Check if student is enrolled in selected course
             if (enrolledStudent.isEnrolledInCourse(selectedCourse.getCourseName())) {
                 foundStudents = true;
@@ -183,7 +183,7 @@ public class CourseMenuManager {
         System.out.print("Enter course name to delete: ");
         String courseName = scanner.nextLine().trim();
         // Validate course
-        Course selectedCourse = mainApp.courseValidation(courseName);
+        Course selectedCourse = entryApp.courseValidation(courseName);
         // Check if course exists
         if (selectedCourse == null) {
             System.out.println("Error: Course '" + courseName + "' not found.");
@@ -192,7 +192,7 @@ public class CourseMenuManager {
 
         boolean hasAssignments = false;
         // Check if any assignments are linked to this course
-        for (Assignment assignment : Main.assignmentMap.values()) {
+        for (Assignment assignment : Entry.assignmentMap.values()) {
             if (assignment.getCourse().getCourseName().equals(courseName)) {
                 hasAssignments = true;
                 break;
@@ -210,7 +210,7 @@ public class CourseMenuManager {
         }
         
         // Delete all assignments for this course
-        Main.assignmentMap.values().removeIf(a -> a.getCourse().equals(selectedCourse));
+        Entry.assignmentMap.values().removeIf(a -> a.getCourse().equals(selectedCourse));
     }
 
         // Confirm deletion
@@ -223,7 +223,7 @@ public class CourseMenuManager {
         }
     
         // Remove course from the system
-        Main.courseMap.remove(courseName);
+        Entry.courseMap.remove(courseName);
         System.out.println("Success! Course '" + courseName + "' has been deleted.");
     }
 
@@ -239,7 +239,7 @@ public class CourseMenuManager {
         String courseName = scanner.nextLine().trim();
     
         // Validate course
-        Course selectedCourse = mainApp.courseValidation(courseName);
+        Course selectedCourse = entryApp.courseValidation(courseName);
         if (selectedCourse == null) {
             System.out.println("Error: Course '" + courseName + "' not found.");
             return;

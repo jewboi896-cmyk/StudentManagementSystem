@@ -34,7 +34,7 @@ public class Main {
     public static AcademicTerm currentTerm = null;
 
     public static void main(String[] args) throws Exception {
-        Menu menu = new Menu(new Main());
+        Menu menu = new Menu(new Entry());
         menu.start();
     }
 
@@ -328,7 +328,7 @@ public class Main {
         return attendanceMap.get(key);
     }
     public static AcademicTerm getTermByDate(LocalDate date, AcademicTerm terms) {
-        for (AcademicTerm term : Main.termMap.values()) {
+        for (AcademicTerm term : Entry.termMap.values()) {
             if (term.doesDateFallWithinTerm(date)) {
                 return term;
             }

@@ -5,13 +5,13 @@ Manages everything to do with weighted calculations and such
 package CategoryWeight;
 
 import Course.Course;
-import Main.Main;
+import Main.Entry;
 import java.util.Scanner;
 
 public class CategoryWeightManager {
     private final Scanner scanner;
 
-    public CategoryWeightManager(Scanner scanner, Main mainApp) {
+    public CategoryWeightManager(Scanner scanner, Entry entryApp) {
         this.scanner = scanner;
     }
     

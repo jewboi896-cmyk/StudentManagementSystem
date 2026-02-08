@@ -5,12 +5,11 @@ import Assignments.AssignmentSubmission;
 import Course.Course;
 import GPACalculator.GpaCalculator;
 import Grades.TermGrade;
-import Main.Main;
+import Main.Entry;
 import Term.AcademicTerm;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -90,7 +89,7 @@ public class Student {
     }
 
     public TermGrade getCurrentGrade(Course course) {
-        return getGradeForTerm(course, Main.currentTerm);
+        return getGradeForTerm(course, Entry.currentTerm);
     }
 
     public double getTermGPA(AcademicTerm currentTerm) {
@@ -118,7 +117,7 @@ public class Student {
             // add to map
             Map<AcademicTerm, TermGrade> termGrades = entry.getValue();
             // loop through course grades for all courses
-            for (Entry<AcademicTerm, TermGrade> termEntry : termGrades.entrySet()) {
+            for (Map.Entry<AcademicTerm, TermGrade> termEntry : termGrades.entrySet()) {
                 // Get the TermGrade object
                 TermGrade letterGrade = termEntry.getValue();
                 // Put courseName and letterGrade into allGrades
@@ -163,9 +162,9 @@ public class Student {
         enrolledCourses.remove(courseName);
         courseGrades.remove(courseName);
         
-        Course course = Main.courseMap.get(courseName);
+        Course course = Entry.courseMap.get(courseName);
         if (course != null) {
-            for (Assignment assignment : Main.assignmentMap.values()) {
+            for (Assignment assignment : Entry.assignmentMap.values()) {
                 if (assignment.getCourse().equals(course)) {
                     assignmentScore.remove(assignment.getAssignmentName());
                     trackSubmissions.remove(getSubmissionKey(assignment));

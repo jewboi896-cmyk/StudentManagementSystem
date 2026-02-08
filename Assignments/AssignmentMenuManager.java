@@ -8,20 +8,19 @@ import Course.Course;
 import Date.DateUtil;
 import Grades.GradeResult;
 import Grades.TermGrade;
-import Main.Main;
+import Main.Entry;
 import Role.RoleUtil;
 import Student.Student;
-import Term.AcademicTerm;
 import User.User;
 import java.util.Scanner;
 
 public class AssignmentMenuManager {
     private final Scanner scanner;
-    private final Main mainApp;
+    private final Entry entryApp;
 
-    public AssignmentMenuManager(Scanner scanner, Main mainApp) {
+    public AssignmentMenuManager(Scanner scanner, Entry entryApp) {
         this.scanner = scanner;
-        this.mainApp = mainApp;
+        this.entryApp = entryApp;
     }
 
     public void viewAssignmentInfo(User currentUser) {
@@ -29,7 +28,7 @@ public class AssignmentMenuManager {
         System.out.print("Enter assignment name: ");
         String assignmentName = scanner.nextLine().trim();
         // Validate assignment
-        Assignment assignment = mainApp.assignmentValidation(assignmentName);
+        Assignment assignment = entryApp.assignmentValidation(assignmentName);
         // Check if assignment exists
         if (assignment == null) {
             System.out.println("Error: Assignment '" + assignmentName + "' not found.");
@@ -67,7 +66,7 @@ public class AssignmentMenuManager {
         String name = scanner.nextLine().trim();
     
         // Check if assignment already exists
-        if (Main.assignmentMap.containsKey(name)) {
+        if (Entry.assignmentMap.containsKey(name)) {
             System.out.println("Error: An assignment with the name '" + name + "' already exists.");
             return;
         }
@@ -100,7 +99,7 @@ public class AssignmentMenuManager {
         String courseName = scanner.nextLine().trim();
 
         // Validate course
-        Course course = mainApp.courseValidation(courseName);
+        Course course = entryApp.courseValidation(courseName);
 
         // Check if course exists
         if (course == null) {
@@ -114,7 +113,7 @@ public class AssignmentMenuManager {
     
         // Create and add the assignment
         Assignment newAssignment = new Assignment(name, maxScore, dueDate, description, course, category, null);
-        Main.addAssignment(newAssignment);
+        Entry.addAssignment(newAssignment);
 
         System.out.println("Success! Assignment '" + name + "' has been added to " + courseName + ".");
     }
@@ -132,7 +131,7 @@ public class AssignmentMenuManager {
         String studentName = scanner.nextLine().trim();
 
         // Validate student
-        Student student = mainApp.studentValidation(studentName);
+        Student student = entryApp.studentValidation(studentName);
 
         // Check if student exists
         if (student == null) {
@@ -145,7 +144,7 @@ public class AssignmentMenuManager {
         String assignmentName = scanner.nextLine().trim();
 
         // Validate assignment
-        Assignment assignment = mainApp.assignmentValidation(assignmentName);
+        Assignment assignment = entryApp.assignmentValidation(assignmentName);
 
         // Check if assignment exists
         if (assignment == null) {
@@ -211,9 +210,9 @@ public class AssignmentMenuManager {
 
         // Recalculate course grade
         Course course = assignment.getCourse();
-        GradeResult gradeResult = Main.calculateStudentCourseGradeWithPercentage(student, course);
+        GradeResult gradeResult = Entry.calculateStudentCourseGradeWithPercentage(student, course);
         TermGrade termGrade = new TermGrade(student, course, gradeResult.getLetterGrade(), gradeResult.getPercentageGrade(), comments);
-        student.addCourseGrade(course, Main.currentTerm, termGrade);
+        student.addCourseGrade(course, Entry.currentTerm, termGrade);
 
         System.out.println("\n=== Grade Updated Successfully ===");
         System.out.println("Score: " + newScore + "/" + assignment.getMaxScore());
@@ -247,7 +246,7 @@ public class AssignmentMenuManager {
 
         // Validate student if name provided
         if (!studentName.isEmpty()) {
-            student = mainApp.studentValidation(studentName);
+            student = entryApp.studentValidation(studentName);
             if (student == null) {
                 System.out.println("Error: Student '" + studentName + "' not found.");
                 return;
@@ -258,7 +257,7 @@ public class AssignmentMenuManager {
         boolean foundAny = false;
 
         // Iterate through all assignments
-        for (Assignment assignment : Main.assignmentMap.values()) {
+        for (Assignment assignment : Entry.assignmentMap.values()) {
             String dueDate = assignment.getDueDate();
             boolean hasScore = student != null && student.getScoreForAssignment(assignment) != null;
             String status = DateUtil.getAssignmentStatus(dueDate, hasScore);
@@ -313,7 +312,7 @@ public class AssignmentMenuManager {
         System.out.print("Enter assignment name to delete: ");
         String assignmentName = scanner.nextLine().trim();
         // Validate assignment
-        Assignment assignment = mainApp.assignmentValidation(assignmentName);
+        Assignment assignment = entryApp.assignmentValidation(assignmentName);
         // Check if assignment exists
         if (assignment == null) {
             System.out.println("Error: Assignment '" + assignmentName + "' not found.");
@@ -329,7 +328,7 @@ public class AssignmentMenuManager {
         }
     
         // Remove assignment from the system
-        Main.assignmentMap.remove(assignmentName);
+        Entry.assignmentMap.remove(assignmentName);
         System.out.println("Success! Assignment '" + assignmentName + "' has been deleted.");
     }
 
@@ -345,7 +344,7 @@ public class AssignmentMenuManager {
 
         Course targetCourse = null;
         if (!courseName.isEmpty()) {
-            targetCourse = mainApp.courseValidation(courseName);
+            targetCourse = entryApp.courseValidation(courseName);
             if (targetCourse == null) {
                 System.out.println("Error: Course '" + courseName + "' not found.");
                 return;
@@ -363,7 +362,7 @@ public class AssignmentMenuManager {
         System.out.println("\n--- Missing Assignments Report ---");
         boolean foundAny = false;
 
-        for (Assignment assignment : Main.assignmentMap.values()) {
+        for (Assignment assignment : Entry.assignmentMap.values()) {
             // Filter by course if specified
             if (targetCourse != null && !assignment.getCourse().equals(targetCourse)) {
                 continue;
@@ -380,7 +379,7 @@ public class AssignmentMenuManager {
             System.out.println("Students with missing submissions:");
 
             boolean foundMissing = false;
-            for (Student student : Main.studentMap.values()) {
+            for (Student student : Entry.studentMap.values()) {
                 // if student is enrolled in the course and has a submission, get it
                 if (student.isEnrolledInCourse(assignment.getCourse().getCourseName())) {
                     AssignmentSubmission submission = student.getSubmission(assignment);

@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
-import Main.Main;
+import Main.Entry;
 import User.User;
 import Role.RoleUtil;
 import Term.AcademicTerm.TermStatus;
@@ -13,11 +13,11 @@ import Term.AcademicTerm.TermType;
 
 public class AcademicTermManager {
     private final Scanner scanner;
-    public static Main mainApp;
+    public static Entry entryApp;
 
-    public AcademicTermManager(Scanner scanner, Main mainApp) {
+    public AcademicTermManager(Scanner scanner, Entry entryApp) {
         this.scanner = scanner;
-        this.mainApp = mainApp;
+        this.entryApp = entryApp;
     }
 
     public void viewTermInfo(User currentUser) {
@@ -33,7 +33,7 @@ public class AcademicTermManager {
         
         if (termName.isEmpty()) {
             // Get current term
-            term = Main.currentTerm;
+            term = Entry.currentTerm;
             if (term == null) {
                 System.out.println("Error: No current term is set.");
                 return;
@@ -41,7 +41,7 @@ public class AcademicTermManager {
         } 
         else {
             // Validate term
-            term = mainApp.termValidation(termName);
+            term = entryApp.termValidation(termName);
             
             // Check if term exists
             if (term == null) {
@@ -58,7 +58,7 @@ public class AcademicTermManager {
         
         // Display term information
         System.out.println("\n=== Term Details ===");
-        mainApp.displayTermAttributes(term);
+        entryApp.displayTermAttributes(term);
     }
 
     public void addNewTerm(User currentUser) {
@@ -75,7 +75,7 @@ public class AcademicTermManager {
         String termName = scanner.nextLine().trim();
         
         // Check if term already exists
-        if (Main.termMap.containsKey(termName)) {
+        if (Entry.termMap.containsKey(termName)) {
             System.out.println("Error: A term with the name '" + termName + "' already exists.");
             return;
         }
@@ -149,14 +149,14 @@ public class AcademicTermManager {
         
         // Create the new term
         AcademicTerm newTerm = new AcademicTerm(termName, startDate, endDate, termType, termStatus);
-        Main.addTerm(newTerm);
+        Entry.addTerm(newTerm);
         
         // Ask if this should be the current term
         if (termStatus == TermStatus.ACTIVE) {
             System.out.print("\nSet this as the current term? (yes/no): ");
             String setAsCurrent = scanner.nextLine().trim().toLowerCase();
             if (setAsCurrent.equals("yes") || setAsCurrent.equals("y")) {
-                Main.currentTerm = newTerm;
+                Entry.currentTerm = newTerm;
                 System.out.println("This term has been set as the current term.");
             }
         }
@@ -176,7 +176,7 @@ public class AcademicTermManager {
         String termName = scanner.nextLine().trim();
 
         // Validate term
-        AcademicTerm term = mainApp.termValidation(termName);
+        AcademicTerm term = entryApp.termValidation(termName);
 
         // Check if term exists
         if (term == null) {
@@ -205,11 +205,11 @@ public class AcademicTermManager {
         }
         
         // Remove term from the system
-        Main.termMap.remove(termName);
+        Entry.termMap.remove(termName);
         
         // If this was the current term, clear it
-        if (Main.currentTerm != null && Main.currentTerm.equals(term)) {
-            Main.currentTerm = null;
+        if (Entry.currentTerm != null && Entry.currentTerm.equals(term)) {
+            Entry.currentTerm = null;
             System.out.println("Note: This was the current term. No current term is now set.");
         }
         
@@ -226,16 +226,16 @@ public class AcademicTermManager {
         System.out.println("\n=== Set Current Term ===");
         
         // Show available terms
-        if (Main.termMap.isEmpty()) {
+        if (Entry.termMap.isEmpty()) {
             System.out.println("Error: No terms exist in the system.");
             return;
         }
         
         System.out.println("\nAvailable terms:");
         int index = 1;
-        for (String termName : Main.termMap.keySet()) {
-            AcademicTerm term = Main.termMap.get(termName);
-            String current = (Main.currentTerm != null && Main.currentTerm.equals(term)) ? " (CURRENT)" : "";
+        for (String termName : Entry.termMap.keySet()) {
+            AcademicTerm term = Entry.termMap.get(termName);
+            String current = (Entry.currentTerm != null && Entry.currentTerm.equals(term)) ? " (CURRENT)" : "";
             System.out.println(index + ". " + termName + " [" + term.getTermStatus() + "]" + current);
             index++;
         }
@@ -243,14 +243,14 @@ public class AcademicTermManager {
         System.out.print("\nEnter term name to set as current: ");
         String termName = scanner.nextLine().trim();
         
-        AcademicTerm term = mainApp.termValidation(termName);
+        AcademicTerm term = entryApp.termValidation(termName);
         if (term == null) {
             System.out.println("Error: Term '" + termName + "' not found.");
             return;
         }
         
         // Set as current term
-        Main.currentTerm = term;
+        Entry.currentTerm = term;
         System.out.println("Success! '" + termName + "' is now the current term.");
     }
 
@@ -265,7 +265,7 @@ public class AcademicTermManager {
         System.out.print("Enter term name: ");
         String termName = scanner.nextLine().trim();
 
-        AcademicTerm term = mainApp.termValidation(termName);
+        AcademicTerm term = entryApp.termValidation(termName);
         if (term == null) {
             System.out.println("Error: Term '" + termName + "' not found.");
             return;
@@ -302,21 +302,21 @@ public class AcademicTermManager {
     public void viewAllTerms(User currentUser, LocalDate currentDate) {
         System.out.println("\n=== All Academic Terms ===");
         
-        if (Main.termMap.isEmpty()) {
+        if (Entry.termMap.isEmpty()) {
             System.out.println("No terms exist in the system.");
             return;
         }
         
         // Display current term if set
-        if (Main.currentTerm != null) {
-            System.out.println("\nCurrent Term: " + Main.currentTerm.getTermName());
+        if (Entry.currentTerm != null) {
+            System.out.println("\nCurrent Term: " + Entry.currentTerm.getTermName());
             System.out.println("----------------------------------------");
         }
         
         System.out.println("\nAll Terms:");
         System.out.println("========================================");
         
-        for (AcademicTerm term : Main.termMap.values()) {
+        for (AcademicTerm term : Entry.termMap.values()) {
             System.out.println("\nTerm: " + term.getTermName());
             System.out.println("  Type: " + term.getTermType());
             System.out.println("  Status: " + term.getTermStatus());
@@ -342,7 +342,7 @@ public class AcademicTermManager {
         System.out.print("Enter term name: ");
         String termName = scanner.nextLine().trim();
 
-        AcademicTerm term = mainApp.termValidation(termName);
+        AcademicTerm term = entryApp.termValidation(termName);
         if (term == null) {
             System.out.println("Error: Term '" + termName + "' not found.");
             return;
@@ -386,7 +386,7 @@ public class AcademicTermManager {
     public void viewTermsByYear(User currentUser) {
         System.out.println("\n=== View Terms by Academic Year ===");
         
-        if (Main.yearMap.isEmpty()) {
+        if (Entry.yearMap.isEmpty()) {
             System.out.println("Error: No academic years exist in the system.");
             System.out.println("Would you like to see all terms instead? (yes/no): ");
             String response = scanner.nextLine().trim().toLowerCase();
@@ -399,7 +399,7 @@ public class AcademicTermManager {
         // Show available years
         System.out.println("\nAvailable academic years:");
         int index = 1;
-        for (String yearName : Main.yearMap.keySet()) {
+        for (String yearName : Entry.yearMap.keySet()) {
             System.out.println(index + ". " + yearName);
             index++;
         }
@@ -408,7 +408,7 @@ public class AcademicTermManager {
         String yearName = scanner.nextLine().trim();
         
         // Validate year exists
-        AcademicYear year = Main.yearMap.get(yearName);
+        AcademicYear year = Entry.yearMap.get(yearName);
         if (year == null) {
             System.out.println("Error: Academic year '" + yearName + "' not found.");
             return;
@@ -417,7 +417,7 @@ public class AcademicTermManager {
         // Get all terms for this year
         java.util.List<AcademicTerm> termsInYear = new java.util.ArrayList<>();
         
-        for (AcademicTerm term : Main.termMap.values()) {
+        for (AcademicTerm term : Entry.termMap.values()) {
             // Check if term falls within the academic year
             // Assumes AcademicYear has getStartDate() and getEndDate() methods
             if (isTermInYear(term, year)) {
@@ -442,7 +442,7 @@ public class AcademicTermManager {
             System.out.println("  End: " + term.getEndDate());
             System.out.println("  Locked: " + (term.isLocked() ? "Yes" : "No"));
             
-            if (Main.currentTerm != null && Main.currentTerm.equals(term)) {
+            if (Entry.currentTerm != null && Entry.currentTerm.equals(term)) {
                 System.out.println("  [CURRENT TERM]");
             }
         }
