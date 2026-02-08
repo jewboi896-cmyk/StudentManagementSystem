@@ -1,0 +1,24 @@
+{
+  "Bob Smith": {
+    "name": "Bob Smith",
+    "age": 18,
+    "year": "Freshman",
+    "courseGrades": {
+      "Introduction to Programming": "B"
+    },
+    "assignmentScore": {
+      "Homework 1": 25
+    }
+  },
+  "Alice Johnson": {
+    "name": "Alice Johnson",
+    "age": 20,
+    "year": "Sophomore",
+    "courseGrades": {
+      "Introduction to Programming": "A"
+    },
+    "assignmentScore": {
+      "Homework 1": 28
+    }
+  }
+}
